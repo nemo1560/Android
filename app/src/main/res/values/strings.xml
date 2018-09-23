@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">sqlLite</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="class_array">
+        <item></item>
+        <item>C++</item>
+        <item>Java</item>
+        <item>HTML</item>
+        <item>PHP</item>
+        <item>.Net</item>
+        <item>Android</item>
+        <item>React</item>
+    </string-array>
+</resources>
