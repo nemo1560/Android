@@ -101,20 +101,41 @@ public class SQL_manager extends SQLiteOpenHelper {
         return eStudentList;
     }
 
-    public List<eStudent>getRequest(String name){
+    public List<eStudent>getRequest(String name,String subjects){
         List<eStudent>eStudentList = new ArrayList<>();
         String selection_TEN = TEN+" =?";
+        String selection_MON = MON+" =?";
+        String selection_MORE = TEN+" =?" + " AND " + MON+" =?";
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        if(!name.equals("")) {
+        if(!name.equals("")&&subjects.equals("")) {
             cursor = sqLiteDatabase.query(DATABASE_TABLE, null, selection_TEN, new String[]{name}, null, null, null);
-            if(cursor.moveToFirst()) {
-                do {
-                    eStudent eStudent = new eStudent(0, null, cursor.getString(0), null);
-                    eStudentList.add(eStudent);
-                } while (cursor.moveToNext());
-            }
+        }else if(!name.equals("")&&!subjects.equals("")){
+            cursor = sqLiteDatabase.query(DATABASE_TABLE, null,selection_MORE, new String[]{name,subjects}, null, null, null);
+        }else if(name.equals("")&&!subjects.equals("")){
+            cursor = sqLiteDatabase.query(DATABASE_TABLE, null, selection_MON, new String[]{subjects}, null, null, null);
+        }
+        if(cursor.moveToFirst()) {
+            do {
+                eStudent eStudent = new eStudent(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3));
+                eStudentList.add(eStudent);
+            } while (cursor.moveToNext());
         }
         return eStudentList;
+    }
+
+    public boolean editData(eStudent eStudent){
+        boolean edited = false;
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TEN,eStudent.getSv_Ten());
+        contentValues.put(LOP,eStudent.getSv_Lop());
+        contentValues.put(MON,eStudent.getSv_Mon());
+
+        if(eStudent.getSv_Ten() != ""){
+            sqLiteDatabase.update(DATABASE_TABLE,contentValues,eStudent.getSv_Ten(),new String[]{eStudent.getSv_Ten()});
+            edited = true;
+        }
+        return edited;
     }
 
 }

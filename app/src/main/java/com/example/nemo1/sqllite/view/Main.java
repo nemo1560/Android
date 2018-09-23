@@ -33,7 +33,8 @@ public class Main extends Fragment implements View.OnClickListener, AdapterView.
     private Adapter_row adapter_row;
     private List<eStudent> eStudentList;
     private ArrayAdapter arrayAdapter;
-    private String spinner_Selected;
+    private String spinner_Selected ="";
+    private String search ="";
 
     @Nullable
     @Override
@@ -66,15 +67,16 @@ public class Main extends Fragment implements View.OnClickListener, AdapterView.
 
     @Override
     public void onClick(View v) {
-        if(search_Txt.getText().length()==0&&spinner_Selected.equals("")){
+        search = search_Txt.getText().toString();
+        if(search.length()==0&&spinner_Selected.equals("")){
             SQL_manager sql_manager = new SQL_manager(getActivity());
             eStudentList = sql_manager.getAll();
             adapter_row = new Adapter_row(getActivity(),R.layout.custom_row,eStudentList);
             listView.setAdapter(adapter_row);
         }
-        else if(search_Txt.getText().length()>0){
+        else{
             SQL_manager sql_manager = new SQL_manager(getActivity());
-            eStudentList = sql_manager.getRequest(search_Txt.getText().toString());
+            eStudentList = sql_manager.getRequest(search,spinner_Selected);
             adapter_row = new Adapter_row(getActivity(),R.layout.custom_row,eStudentList);
             listView.setAdapter(adapter_row);
         }
